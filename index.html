@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Einsendeaufgabe 7: Z-Buffer Visualisierung</title>
+		<link rel="stylesheet" href="style.css">
+
+		<script src="ext/gl-matrix.js"></script>
+		<script src="GVT_Src_vertexData_plane.js"></script>
+		<script src="GVT_Src_vertexData_sphere.js"></script>
+		<script src="GVT_Src_vertexData_torus.js"></script>
+		<script src="GVT_Src_vertexData_cone.js"></script>
+		<script src="GVT_Src_vertexData_fish.js"></script>
+		<script src="SHA_Src_tpl.js"></script>
+		<script type="x-shader/x-vertex" id="vertexshader">
+			precision mediump float;
+			
+			attribute vec3 aPosition;
+			attribute vec3 aNormal;
+			
+			uniform mat4 uPMatrix;
+			uniform mat4 uMVMatrix;
+			uniform mat3 uNMatrix;
+			uniform vec4 uColor;
+			
+			varying vec4 vColor;
+			
+			void main(){
+				gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
+				
+				vec3 tNormal = uNMatrix * aNormal;
+			
+				vColor = uColor;
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentshader">
+			precision mediump float;
+			varying vec4 vColor;
+			
+			void main() {
+				gl_FragColor = vec4(vColor.rgb * gl_FragCoord.zzz, vColor.a); 
+			}
+		</script>
+	</head>
+	<body onload="app.start()">
+		<h1>Einsendeaufgabe 7: Z-Buffer Visualisierung</h1>
+		<canvas id="canvas" width="800" height="500"></canvas>
+
+		<h2> Interaktionen: </h2>
+		<table>
+			<tr>
+			  <th>Taste</th>
+			  <th>Aktion</th>
+			</tr>
+			<tr>
+				<th>P,F,O</th>
+				<th>Veränderung der Projektion (perspective, frustum, ortho)</th>
+			</tr>
+			<tr>
+				<th>Pfeiltasten</th>
+				<th>Drehung der Kamera um die Y-Achse</th>
+			</tr>
+			<tr>
+				<th>W/S</th>
+				<th>Bewegung der Kamera nach oben/unten</th>
+			</tr>
+			<tr>
+				<th>A/D</th>
+				<th>Bewegung der Kamera zur Mitte hin/von der Mitte weg</th>
+			</tr>
+			<tr>
+				<th>V/Shift-V</th>
+				<th>Bewegung der Kamera im Bogenmaß (nur in folgender Projektionen möglich: perspective)</th>
+			</tr>
+			<tr>
+				<th>B/Shift-B</th>
+				<th>Abmessungen der kameranahen Ebene (nur in folgenden Projektionen möglich: frustum, ortho)</th>
+			</tr>
+		</table>	
+		
+	</body>
+</html>
